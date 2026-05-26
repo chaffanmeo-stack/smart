@@ -1,0 +1,31 @@
+name: Build Android APK with Buildozer
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Source Code
+      uses: actions/checkout@v3
+
+    - name: Setup Setup-tools for Python stability
+      run: |
+        pip install --upgrade pip setuptools virtualenv
+
+    - name: Build with Buildozer Engine
+      uses: ArtemGovorov/buildozer-action@v1
+      id: buildozer
+      with:
+        command: buildozer android debug --no-compile-json
+        repository_root: .
+
+    - name: Upload Generated APK Artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: Smart-Khata-App
+        path: bin/
